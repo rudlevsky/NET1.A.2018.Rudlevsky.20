@@ -24,23 +24,62 @@ namespace MatrixLibrary.Matrixes
             matrixArray[i, j] = value;
         }
 
+        public void AddCustomMatrix(T[,] matrix)
+        {
+            if(CheckCustomMatrix(matrix))
+            {
+                matrixArray = matrix;
+            } 
+            else
+            {
+                throw new InvalidOperationException($"{nameof(matrix)} is not symmetric.");
+            }
+        }
+        
+        private bool CheckCustomMatrix(T[,] matrix)
+        {
+            int count = 0;
+            int length = (int)Math.Sqrt(matrix.Length);
+
+            for (int i = 0; i < length; i++)
+            { 
+                for (int j = count; j < length - i; j++)
+                {
+                    if (i != j)
+                    {
+                        dynamic temp1 = matrix[i, j];
+                        dynamic temp2 = matrix[j, i];
+
+                        if (temp1 != temp2)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                count++;
+            }
+
+            return true;
+        }
+
         public static SymmetricMatrix<T> operator +(SymmetricMatrix<T> symmetric, DiagonalMatrix<T> diagonal)
         {
             CheckSizes(symmetric, diagonal);
 
-            return GenerateMatrix(symmetric, diagonal);
+            return GenerateSymmetric(symmetric, diagonal);
         }
 
         public static SymmetricMatrix<T> operator +(SymmetricMatrix<T> symmetric1, SymmetricMatrix<T> symmetric2)
         {
             CheckSizes(symmetric1, symmetric2);
 
-            return GenerateMatrix(symmetric1, symmetric2);
+            return GenerateSymmetric(symmetric1, symmetric2);
         }
 
-        private static SymmetricMatrix<T> GenerateMatrix(Matrix<T> matrix1, Matrix<T> matrix2)
+        private static SymmetricMatrix<T> GenerateSymmetric(Matrix<T> matrix1, Matrix<T> matrix2)
         {
-            var matrix = new SymmetricMatrix<T>(matrix1.Size);
+            var matrix = new T[matrix1.Size, matrix1.Size];
 
             for (int i = 0; i < matrix1.Size; i++)
             {
@@ -52,7 +91,10 @@ namespace MatrixLibrary.Matrixes
                 }
             }
 
-            return matrix;
+            var symmetric = new SymmetricMatrix<T>(matrix1.Size);
+            symmetric.AddCustomMatrix(matrix);
+
+            return symmetric;
         }
 
         private static void CheckSizes(Matrix<T> matrix1, Matrix<T> matrix2)

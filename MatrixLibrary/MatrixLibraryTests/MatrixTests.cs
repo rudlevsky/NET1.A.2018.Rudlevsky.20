@@ -121,6 +121,78 @@ namespace MatrixLibraryTests
         }
 
         [Test]
+        public void SumTest_DiagonalPlusDiagonal_Diagonal()
+        {
+            var matrix1 = new DiagonalMatrix<int>(2);
+            matrix1[0, 0] = 1;
+            matrix1[1, 1] = 2;
+
+            var matrix2 = new DiagonalMatrix<int>(2);
+            matrix2[0, 0] = 1;
+            matrix2[1, 1] = 2;
+
+            var matrix = matrix1 + matrix2;
+
+            int[] array = { 2, 0, 0, 4 };
+
+            AssertMatrixTest_MatrixAndExpectedResult(matrix, array);
+        }
+
+        [Test]
+        public void SumTest_DiagonalPlusSquare_Square()
+        {
+            var matrix1 = new DiagonalMatrix<int>(2);
+            matrix1[0, 0] = 1;
+            matrix1[1, 1] = 2;
+
+            var matrix2 = new SquareMatrix<int>(2);
+            matrix2[1, 0] = 2;
+            matrix2[1, 1] = 2;
+
+            var matrix = matrix1 + matrix2;
+
+            int[] array = { 1, 0, 2, 4 };
+
+            AssertMatrixTest_MatrixAndExpectedResult(matrix, array);
+        }
+
+        [Test]
+        public void SumTest_SymmetricPlusDiagonal_Symmetric()
+        {
+            var matrix1 = new SymmetricMatrix<int>(2);
+
+            matrix1.AddCustomMatrix(new int[,] { { 1, 2 }, { 2, 1 } });
+
+            var matrix2 = new DiagonalMatrix<int>(2);
+            matrix2[0, 0] = 1;
+            matrix2[1, 1] = 1;
+
+            var matrix = matrix1 + matrix2;
+
+            int[] array = { 2, 2, 2, 2 };
+
+            AssertMatrixTest_MatrixAndExpectedResult(matrix, array);
+        }
+
+        [Test]
+        public void SumTest_SymmetricPlusSymmetric_Symmetric()
+        {
+            var matrix1 = new SymmetricMatrix<int>(2);
+
+            matrix1.AddCustomMatrix(new int[,] { { 1, 2 }, { 2, 1 } });
+
+            var matrix2 = new SymmetricMatrix<int>(2);
+
+            matrix2.AddCustomMatrix(new int[,] { { 1, 2 }, { 2, 1 } });
+
+            var matrix = matrix1 + matrix2;
+
+            int[] array = { 2, 4, 4, 2 };
+
+            AssertMatrixTest_MatrixAndExpectedResult(matrix, array);
+        }
+
+        [Test]
         public void ValidationTest_UncorrectDataFirstIndex_ArgumentException()
         {
             var matrix = new SquareMatrix<int>(2);

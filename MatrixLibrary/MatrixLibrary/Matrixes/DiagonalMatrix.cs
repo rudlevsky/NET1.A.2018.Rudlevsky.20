@@ -42,7 +42,15 @@ namespace MatrixLibrary.Matrixes
         {
             var matrix = new SquareMatrix<T>(diagonal.Size);
 
-            GenerateMatrix(matrix, diagonal, square);
+            for (int i = 0; i < diagonal.Size; i++)
+            {
+                for (int j = 0; j < diagonal.Size; j++)
+                {
+                    dynamic temp1 = diagonal[i, j], temp2 = square[i, j];
+
+                    matrix[i, j] = temp1 + temp2;
+                }
+            }
 
             return matrix;
         }
@@ -50,23 +58,17 @@ namespace MatrixLibrary.Matrixes
         private static DiagonalMatrix<T> GenerateDiagonalMatrix(DiagonalMatrix<T> diagonal1, DiagonalMatrix<T> diagonal2)
         {
             var matrix = new DiagonalMatrix<T>(diagonal1.Size);
+            int j = 0;
 
-            GenerateMatrix(matrix, diagonal1, diagonal2);
+            for (int i = 0; i < diagonal1.Size; i++)
+            {              
+                dynamic temp1 = diagonal1[i, j], temp2 = diagonal2[i, j];
+
+                matrix[i, j] = temp1 + temp2;
+                j++;
+            }
 
             return matrix;
-        }
-
-        private static void GenerateMatrix(Matrix<T> matrix, Matrix<T> first, Matrix<T> second)
-        {
-            for (int i = 0; i < first.Size; i++)
-            {
-                for (int j = 0; j < second.Size; j++)
-                {
-                    dynamic temp1 = first[i, j], temp2 = second[i, j];
-
-                    matrix[i, j] = temp1 + temp2;
-                }
-            }
         }
 
         private static void CheckSizes(Matrix<T> matrix1, Matrix<T> matrix2)
