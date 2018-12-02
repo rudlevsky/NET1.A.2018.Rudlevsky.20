@@ -1,16 +1,48 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MatrixLibrary.Matrixes
 {
+    /// <summary>
+    /// Class of the diagonal matrix.
+    /// </summary>
+    /// <typeparam name="T">Type of the matrix arguments.</typeparam>
     public class DiagonalMatrix<T> : Matrix<T>
     {
+        /// <summary>
+        /// Constructor without parameters.
+        /// </summary>
         public DiagonalMatrix() { }
 
+        /// <summary>
+        /// Constructor with one parameter.
+        /// </summary>
         public DiagonalMatrix(int size) : base(size) { }
+
+        /// <summary>
+        /// Add operation for two operands.
+        /// </summary>
+        /// <param name="diagonal">First operand.</param>
+        /// <param name="square">Second operand.</param>
+        /// <returns>Result of adding.</returns>
+        public static SquareMatrix<T> operator +(DiagonalMatrix<T> diagonal, SquareMatrix<T> square)
+        {
+            CheckSizes(diagonal, square);
+
+            return GenerateSquareMatrix(diagonal, square);
+        }
+
+        /// <summary>
+        /// Add operation for two operands.
+        /// </summary>
+        /// <param name="diagonal1">First operand.</param>
+        /// <param name="diagonal2">Second operand.</param>
+        /// <returns>Result of adding.</returns>
+        public static DiagonalMatrix<T> operator +(DiagonalMatrix<T> diagonal1, DiagonalMatrix<T> diagonal2)
+        {
+            CheckSizes(diagonal1, diagonal2);
+
+            return GenerateDiagonalMatrix(diagonal1, diagonal2);
+        }
 
         protected override T GetElement(int i, int j) => matrixArray[i, j];
 
@@ -22,20 +54,6 @@ namespace MatrixLibrary.Matrixes
             }
 
             matrixArray[i, j] = value;
-        }
-
-        public static SquareMatrix<T> operator +(DiagonalMatrix<T> diagonal, SquareMatrix<T> square)
-        {
-            CheckSizes(diagonal, square);
-
-            return GenerateSquareMatrix(diagonal, square);
-        }
-
-        public static DiagonalMatrix<T> operator +(DiagonalMatrix<T> diagonal1, DiagonalMatrix<T> diagonal2)
-        {
-            CheckSizes(diagonal1, diagonal2);
-
-            return GenerateDiagonalMatrix(diagonal1, diagonal2);
         }
 
         private static SquareMatrix<T> GenerateSquareMatrix(DiagonalMatrix<T> diagonal, SquareMatrix<T> square)

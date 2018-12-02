@@ -1,29 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MatrixLibrary.Matrixes
 {
+    /// <summary>
+    /// Class for symmetric matrix.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class SymmetricMatrix<T> : Matrix<T>
     {
+        /// <summary>
+        /// Constructor without parameters.
+        /// </summary>
         public SymmetricMatrix() { }
 
+        /// <summary>
+        /// Constructor with one parameter.
+        /// </summary>
         public SymmetricMatrix(int size) : base(size) { }
 
-        protected override T GetElement(int i, int j) => matrixArray[i, j];
-
-        protected override void SetElement(T value, int i, int j)
-        {
-            if (i != j)
-            {
-                throw new InvalidOperationException("Such matrix won't be symmetric.");
-            }
-
-            matrixArray[i, j] = value;
-        }
-
+        /// <summary>
+        /// Adds custom matrix.
+        /// </summary>
+        /// <param name="matrix"></param>
         public void AddCustomMatrix(T[,] matrix)
         {
             if(CheckCustomMatrix(matrix))
@@ -35,34 +33,13 @@ namespace MatrixLibrary.Matrixes
                 throw new InvalidOperationException($"{nameof(matrix)} is not symmetric.");
             }
         }
-        
-        private bool CheckCustomMatrix(T[,] matrix)
-        {
-            int count = 0;
-            int length = (int)Math.Sqrt(matrix.Length);
 
-            for (int i = 0; i < length; i++)
-            { 
-                for (int j = count; j < length - i; j++)
-                {
-                    if (i != j)
-                    {
-                        dynamic temp1 = matrix[i, j];
-                        dynamic temp2 = matrix[j, i];
-
-                        if (temp1 != temp2)
-                        {
-                            return false;
-                        }
-                    }
-                }
-
-                count++;
-            }
-
-            return true;
-        }
-
+        /// <summary>
+        /// Add operation for two operands.
+        /// </summary>
+        /// <param name="symmetric">First operand.</param>
+        /// <param name="diagonal">Second operand.</param>
+        /// <returns>Result of adding.</returns>
         public static SymmetricMatrix<T> operator +(SymmetricMatrix<T> symmetric, DiagonalMatrix<T> diagonal)
         {
             CheckSizes(symmetric, diagonal);
@@ -70,11 +47,29 @@ namespace MatrixLibrary.Matrixes
             return GenerateSymmetric(symmetric, diagonal);
         }
 
+        /// <summary>
+        /// Add operation for two operands.
+        /// </summary>
+        /// <param name="symmetric1">First operand.</param>
+        /// <param name="symmetric2">Second operand.</param>
+        /// <returns>Result of adding.</returns>
         public static SymmetricMatrix<T> operator +(SymmetricMatrix<T> symmetric1, SymmetricMatrix<T> symmetric2)
         {
             CheckSizes(symmetric1, symmetric2);
 
             return GenerateSymmetric(symmetric1, symmetric2);
+        }
+
+        protected override T GetElement(int i, int j) => matrixArray[i, j];
+
+        protected override void SetElement(T value, int i, int j)
+        {
+            if (i != j)
+            {
+                throw new InvalidOperationException("Such matrix won't be symmetric.");
+            }
+
+            matrixArray[i, j] = value;
         }
 
         private static SymmetricMatrix<T> GenerateSymmetric(Matrix<T> matrix1, Matrix<T> matrix2)
@@ -103,6 +98,33 @@ namespace MatrixLibrary.Matrixes
             {
                 throw new InvalidOperationException("Sizes of the matrixes are not equal.");
             }
+        }
+
+        private bool CheckCustomMatrix(T[,] matrix)
+        {
+            int count = 0;
+            int length = (int)Math.Sqrt(matrix.Length);
+
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = count; j < length - i; j++)
+                {
+                    if (i != j)
+                    {
+                        dynamic temp1 = matrix[i, j];
+                        dynamic temp2 = matrix[j, i];
+
+                        if (temp1 != temp2)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                count++;
+            }
+
+            return true;
         }
     }
 }

@@ -1,27 +1,42 @@
 ﻿using MatrixLibrary.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MatrixLibrary
 {
+    /// <summary>
+    /// Abstract class for all matrixes.
+    /// </summary>
+    /// <typeparam name="T">Type of the metrix.</typeparam>
     public abstract class Matrix<T>
     {
+        /// <summary>
+        /// Size of the matrix.
+        /// </summary>
         public int Size { get; }
+
+        /// <summary>
+        /// Event of adding an element.
+        /// </summary>
         public event EventHandler<DataEventArgs> Set;
 
         protected T[,] matrixArray;
 
         private const int STANDARD_SIZE = 5;
 
+        /// <summary>
+        /// Constructor without parameters.
+        /// </summary>
         public Matrix()
         {
             matrixArray = new T[STANDARD_SIZE, STANDARD_SIZE];
             Size = STANDARD_SIZE;
         }
 
+        /// <summary>
+        /// Constructor with one parameter.
+        /// </summary>
+        /// <param name="size">Size of the matrix.</param>
         public Matrix(int size)
         {
             if (size < 2)
@@ -33,6 +48,12 @@ namespace MatrixLibrary
             Size = size;
         }
 
+        /// <summary>
+        /// Indexator of the matrix.
+        /// </summary>
+        /// <param name="i">First index of the matrix.</param>
+        /// <param name="j">Second index of the matrix.</param>
+        /// <returns>Element of the matrix.</returns>
         public T this[int i, int j]
         {
             get
@@ -48,6 +69,10 @@ namespace MatrixLibrary
             }
         }
 
+        /// <summary>
+        /// Prints all matrix.
+        /// </summary>
+        /// <returns>Printed matrix.</returns>
         public virtual string PrintMatrix()
         {
             var builder = new StringBuilder();

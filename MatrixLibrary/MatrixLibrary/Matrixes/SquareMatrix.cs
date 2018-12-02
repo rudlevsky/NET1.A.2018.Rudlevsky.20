@@ -1,22 +1,29 @@
-﻿using MatrixLibrary.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace MatrixLibrary.Matrixes
 {
+    /// <summary>
+    /// Class of the square matrix.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class SquareMatrix<T> : Matrix<T>
     {
+        /// <summary>
+        /// Constructor without parameters.
+        /// </summary>
         public SquareMatrix() { }
 
+        /// <summary>
+        /// Constructor with one parameter.
+        /// </summary>
         public SquareMatrix(int size) : base(size) { }
 
-        protected override T GetElement(int i, int j) => matrixArray[i, j];
- 
-        protected override void SetElement(T value, int i, int j) => matrixArray[i, j] = value;
-
+        /// <summary>
+        /// Add operation for two operands.
+        /// </summary>
+        /// <param name="square">First operand.</param>
+        /// <param name="symmetric">Second operand.</param>
+        /// <returns>Result of adding.</returns>
         public static SquareMatrix<T> operator +(SquareMatrix<T> square, SymmetricMatrix<T> symmetric)
         {
             CheckSizes(square, symmetric);
@@ -24,12 +31,22 @@ namespace MatrixLibrary.Matrixes
             return GenerateMatrix(symmetric, square);
         }
 
+        /// <summary>
+        /// Add operation for two operands.
+        /// </summary>
+        /// <param name="square1">First operand.</param>
+        /// <param name="dsquare2">Second operand.</param>
+        /// <returns>Result of adding.</returns>
         public static SquareMatrix<T> operator +(SquareMatrix<T> square1, SquareMatrix<T> square2)
         {
             CheckSizes(square1, square2);
 
             return GenerateMatrix(square1, square2);
         }
+
+        protected override T GetElement(int i, int j) => matrixArray[i, j];
+
+        protected override void SetElement(T value, int i, int j) => matrixArray[i, j] = value;
 
         private static SquareMatrix<T> GenerateMatrix(Matrix<T> matrix1, Matrix<T> matrix2)
         {

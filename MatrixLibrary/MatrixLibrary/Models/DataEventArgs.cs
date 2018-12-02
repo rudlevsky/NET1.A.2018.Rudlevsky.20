@@ -2,14 +2,27 @@
 
 namespace MatrixLibrary.Models
 {
+    /// <summary>
+    /// Class contains 
+    /// </summary>
     public class DataEventArgs : EventArgs
     {
-        public string message;
+        /// <summary>
+        /// Message for subscribers.
+        /// </summary>
+        public string Message { get; set; }
 
         const string STANDARD_MESSAGE = "Element was changed.";
 
-        public DataEventArgs() => this.message = STANDARD_MESSAGE;
+        /// <summary>
+        /// Constructor without arguments.
+        /// </summary>
+        public DataEventArgs() => Message = STANDARD_MESSAGE;
 
-        public DataEventArgs(string message) => this.message = message;
+        /// <summary>
+        /// Constructor with one argument.
+        /// </summary>
+        /// <param name="message">Message for subscribers.</param>
+        public DataEventArgs(string message) => Message = message;
     }
 }

@@ -13,7 +13,7 @@ namespace MatrixLibraryTests
 
         private void GetData(object obj, DataEventArgs e)
         {
-            data = e.message;
+            data = e.Message;
         }
 
         private void AssertMatrixTest_MatrixAndExpectedResult(Matrix<int> matrix, int[] expectedResult)
