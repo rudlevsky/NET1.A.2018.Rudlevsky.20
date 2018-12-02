@@ -35,7 +35,7 @@ namespace MatrixLibrary.Matrixes
         {
             CheckSizes(diagonal1, diagonal2);
 
-            return GenerateDiagonalMatrix(diagonal1, diagonal1);
+            return GenerateDiagonalMatrix(diagonal1, diagonal2);
         }
 
         private static SquareMatrix<T> GenerateSquareMatrix(DiagonalMatrix<T> diagonal, SquareMatrix<T> square)

@@ -1,4 +1,5 @@
 ﻿using System;
+using MatrixLibrary;
 using MatrixLibrary.Matrixes;
 using MatrixLibrary.Models;
 using NUnit.Framework;
@@ -13,6 +14,20 @@ namespace MatrixLibraryTests
         private void GetData(object obj, DataEventArgs e)
         {
             data = e.message;
+        }
+
+        private void AssertMatrixTest_MatrixAndExpectedResult(Matrix<int> matrix, int[] expectedResult)
+        {
+            int count = 0;
+
+            for (int i = 0; i < matrix.Size; i++)
+            {
+                for (int j = 0; j < matrix.Size; j++)
+                {
+                    Assert.AreEqual(matrix[i, j], expectedResult[count]);
+                    count++;
+                }
+            }
         }
 
         [Test]
@@ -72,13 +87,37 @@ namespace MatrixLibraryTests
         }
 
         [Test]
+        public void SumTest_SquarePlusSquare_Square()
+        {
+            var matrix1 = new SquareMatrix<int>(2);
+            matrix1[0, 0] = 1;
+
+            var matrix2 = new SquareMatrix<int>(2);
+            matrix2[0, 0] = 1;
+            matrix2[0, 1] = 2;
+
+            var matrix = matrix1 + matrix2;
+
+            int[] array = { 2, 2, 0, 0 };
+
+            AssertMatrixTest_MatrixAndExpectedResult(matrix, array);
+        }
+
+        [Test]
         public void SumTest_SquarePlusSymmetric_Square()
         {
             var matrix1 = new SquareMatrix<int>(2);
-            var matrix2 = new SymmetricMatrix<int>(3);
-            SquareMatrix<int> matrix;
+            matrix1[0, 0] = 1;
 
-            Assert.Throws<InvalidOperationException>(() => matrix = matrix1 + matrix2);
+            var matrix2 = new SymmetricMatrix<int>(2);
+            matrix2[0, 0] = 1;
+            matrix2[1, 1] = 2;
+
+            var matrix = matrix1 + matrix2;
+
+            int[] array = { 2, 0, 0, 2 };
+
+            AssertMatrixTest_MatrixAndExpectedResult(matrix, array);
         }
 
         [Test]

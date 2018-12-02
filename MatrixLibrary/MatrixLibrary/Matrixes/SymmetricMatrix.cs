@@ -35,7 +35,7 @@ namespace MatrixLibrary.Matrixes
         {
             CheckSizes(symmetric1, symmetric2);
 
-            return GenerateMatrix(symmetric2, symmetric2);
+            return GenerateMatrix(symmetric1, symmetric2);
         }
 
         private static SymmetricMatrix<T> GenerateMatrix(Matrix<T> matrix1, Matrix<T> matrix2)

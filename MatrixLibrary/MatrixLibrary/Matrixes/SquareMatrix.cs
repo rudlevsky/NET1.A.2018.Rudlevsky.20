@@ -28,7 +28,7 @@ namespace MatrixLibrary.Matrixes
         {
             CheckSizes(square1, square2);
 
-            return GenerateMatrix(square2, square2);
+            return GenerateMatrix(square1, square2);
         }
 
         private static SquareMatrix<T> GenerateMatrix(Matrix<T> matrix1, Matrix<T> matrix2)
