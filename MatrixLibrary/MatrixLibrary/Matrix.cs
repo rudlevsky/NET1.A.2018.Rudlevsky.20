@@ -1,6 +1,5 @@
 ﻿using MatrixLibrary.Models;
 using System;
-using System.Text;
 
 namespace MatrixLibrary
 {
@@ -13,39 +12,24 @@ namespace MatrixLibrary
         /// <summary>
         /// Size of the matrix.
         /// </summary>
-        public int Size { get; }
+        public int Size { get; set; }
 
         /// <summary>
         /// Event of adding an element.
         /// </summary>
         public event EventHandler<DataEventArgs> Set;
 
-        protected T[,] matrixArray;
+        protected T[] matrixArray;
 
-        private const int STANDARD_SIZE = 5;
+        private const int STANDARD_SIZE = 9;
 
         /// <summary>
         /// Constructor without parameters.
         /// </summary>
         public Matrix()
         {
-            matrixArray = new T[STANDARD_SIZE, STANDARD_SIZE];
+            matrixArray = new T[STANDARD_SIZE];
             Size = STANDARD_SIZE;
-        }
-
-        /// <summary>
-        /// Constructor with one parameter.
-        /// </summary>
-        /// <param name="size">Size of the matrix.</param>
-        public Matrix(int size)
-        {
-            if (size < 2)
-            {
-                throw new ArgumentException($"{nameof(size)} can't be less than 2.");
-            }
-
-            matrixArray = new T[size, size];
-            Size = size;
         }
 
         /// <summary>
@@ -67,27 +51,6 @@ namespace MatrixLibrary
                 SetElement(value, i, j);
                 OnSet(new DataEventArgs());
             }
-        }
-
-        /// <summary>
-        /// Prints all matrix.
-        /// </summary>
-        /// <returns>Printed matrix.</returns>
-        public virtual string PrintMatrix()
-        {
-            var builder = new StringBuilder();
-
-            for (int i = 0; i < Size; i++)
-            {
-                for (int j = 0; j < Size; j++)
-                {
-                    builder.Append(matrixArray[i, j] + " ");
-                }
-
-                builder.Append(Environment.NewLine);
-            }
-
-            return builder.ToString();
         }
 
         protected abstract T GetElement(int i, int j);

@@ -3,6 +3,8 @@ using MatrixLibrary;
 using MatrixLibrary.Matrixes;
 using MatrixLibrary.Models;
 using NUnit.Framework;
+using MatrixLibrary.Extensions;
+using System.Collections.Generic;
 
 namespace MatrixLibraryTests
 {
@@ -20,6 +22,16 @@ namespace MatrixLibraryTests
         {
             int count = 0;
 
+            List<int> list = new List<int>();
+
+            for (int i = 0; i < matrix.Size; i++)
+            {
+                for (int j = 0; j < matrix.Size; j++)
+                {
+                    list.Add(matrix[i, j]);
+                }
+            }
+
             for (int i = 0; i < matrix.Size; i++)
             {
                 for (int j = 0; j < matrix.Size; j++)
@@ -33,7 +45,7 @@ namespace MatrixLibraryTests
         [Test]
         public void CheckSizeTest_StandardSize()
         {
-            const int STANDARD_SIZE = 5;
+            const int STANDARD_SIZE = 9;
 
             var matrix = new SquareMatrix<int>();
 
@@ -48,29 +60,6 @@ namespace MatrixLibraryTests
             var matrix = new SquareMatrix<int>(CUSTOM_SIZE);
 
             Assert.AreEqual(CUSTOM_SIZE, matrix.Size);
-        }
-
-        [Test]
-        public void MethodPrintTest_StandardResult()
-        {
-            var matrix = new SquareMatrix<int>(2);
-
-            string print = "0 0 " + Environment.NewLine + "0 0 " + Environment.NewLine;
-
-            Assert.AreEqual(print, matrix.PrintMatrix());
-        }
-
-        [Test]
-        public void MethodPrintTest_CustomResult()
-        {
-            var matrix = new SquareMatrix<int>(2);
-
-            matrix[0, 0] = 1;
-            matrix[0, 1] = 1;
-
-            string print = "1 1 " + Environment.NewLine + "0 0 " + Environment.NewLine;
-
-            Assert.AreEqual(print, matrix.PrintMatrix());
         }
 
         [Test]
@@ -91,14 +80,19 @@ namespace MatrixLibraryTests
         {
             var matrix1 = new SquareMatrix<int>(2);
             matrix1[0, 0] = 1;
+            matrix1[0, 1] = 2;
+            matrix1[1, 0] = 3;
+            matrix1[1, 1] = 4;
 
             var matrix2 = new SquareMatrix<int>(2);
             matrix2[0, 0] = 1;
             matrix2[0, 1] = 2;
+            matrix2[1, 0] = 3;
+            matrix2[1, 1] = 4;
 
-            var matrix = matrix1 + matrix2;
+            var matrix = matrix1.Add(matrix2);
 
-            int[] array = { 2, 2, 0, 0 };
+            int[] array = { 2, 4, 6, 8 };
 
             AssertMatrixTest_MatrixAndExpectedResult(matrix, array);
         }
@@ -113,7 +107,7 @@ namespace MatrixLibraryTests
             matrix2[0, 0] = 1;
             matrix2[1, 1] = 2;
 
-            var matrix = matrix1 + matrix2;
+            var matrix = matrix1.Add(matrix2);
 
             int[] array = { 2, 0, 0, 2 };
 
@@ -131,7 +125,7 @@ namespace MatrixLibraryTests
             matrix2[0, 0] = 1;
             matrix2[1, 1] = 2;
 
-            var matrix = matrix1 + matrix2;
+            var matrix = matrix1.Add(matrix2);
 
             int[] array = { 2, 0, 0, 4 };
 
@@ -149,48 +143,13 @@ namespace MatrixLibraryTests
             matrix2[1, 0] = 2;
             matrix2[1, 1] = 2;
 
-            var matrix = matrix1 + matrix2;
+            var matrix = matrix1.Add(matrix2);
 
             int[] array = { 1, 0, 2, 4 };
 
             AssertMatrixTest_MatrixAndExpectedResult(matrix, array);
         }
 
-        [Test]
-        public void SumTest_SymmetricPlusDiagonal_Symmetric()
-        {
-            var matrix1 = new SymmetricMatrix<int>(2);
-
-            matrix1.AddCustomMatrix(new int[,] { { 1, 2 }, { 2, 1 } });
-
-            var matrix2 = new DiagonalMatrix<int>(2);
-            matrix2[0, 0] = 1;
-            matrix2[1, 1] = 1;
-
-            var matrix = matrix1 + matrix2;
-
-            int[] array = { 2, 2, 2, 2 };
-
-            AssertMatrixTest_MatrixAndExpectedResult(matrix, array);
-        }
-
-        [Test]
-        public void SumTest_SymmetricPlusSymmetric_Symmetric()
-        {
-            var matrix1 = new SymmetricMatrix<int>(2);
-
-            matrix1.AddCustomMatrix(new int[,] { { 1, 2 }, { 2, 1 } });
-
-            var matrix2 = new SymmetricMatrix<int>(2);
-
-            matrix2.AddCustomMatrix(new int[,] { { 1, 2 }, { 2, 1 } });
-
-            var matrix = matrix1 + matrix2;
-
-            int[] array = { 2, 4, 4, 2 };
-
-            AssertMatrixTest_MatrixAndExpectedResult(matrix, array);
-        }
 
         [Test]
         public void ValidationTest_UncorrectDataFirstIndex_ArgumentException()
@@ -217,9 +176,8 @@ namespace MatrixLibraryTests
         {
             var matrix1 = new SquareMatrix<int>(2);
             var matrix2 = new SquareMatrix<int>(3);
-            SquareMatrix<int> matrix;
 
-            Assert.Throws<InvalidOperationException>(() => matrix = matrix1 + matrix2);
+            Assert.Throws<InvalidOperationException>(() => matrix1.Add(matrix2));
         }
 
         [Test]
@@ -227,9 +185,8 @@ namespace MatrixLibraryTests
         {
             var matrix1 = new SquareMatrix<int>(2);
             var matrix2 = new SymmetricMatrix<int>(3);
-            SquareMatrix<int> matrix;
 
-            Assert.Throws<InvalidOperationException>(() => matrix = matrix1 + matrix2);
+            Assert.Throws<InvalidOperationException>(() => matrix1.Add(matrix2));
         }
 
         [Test]
@@ -245,9 +202,8 @@ namespace MatrixLibraryTests
         {
             var matrix1 = new SymmetricMatrix<int>(2);
             var matrix2 = new SymmetricMatrix<int>(3);
-            SymmetricMatrix<int> matrix;
 
-            Assert.Throws<InvalidOperationException>(() => matrix = matrix1 + matrix2);
+            Assert.Throws<InvalidOperationException>(() => matrix1.Add(matrix2));
         }
 
         [Test]
@@ -255,9 +211,8 @@ namespace MatrixLibraryTests
         {
             var matrix1 = new SymmetricMatrix<int>(2);
             var matrix2 = new DiagonalMatrix<int>(3);
-            SymmetricMatrix<int> matrix;
 
-            Assert.Throws<InvalidOperationException>(() => matrix = matrix1 + matrix2);
+            Assert.Throws<InvalidOperationException>(() => matrix1.Add(matrix2));
         }
 
         [Test]
@@ -273,9 +228,8 @@ namespace MatrixLibraryTests
         {
             var matrix1 = new DiagonalMatrix<int>(2);
             var matrix2 = new DiagonalMatrix<int>(3);
-            DiagonalMatrix<int> matrix;
 
-            Assert.Throws<InvalidOperationException>(() => matrix = matrix1 + matrix2);
+            Assert.Throws<InvalidOperationException>(() => matrix1.Add(matrix2));
         }
 
         [Test]
@@ -283,9 +237,8 @@ namespace MatrixLibraryTests
         {
             var matrix1 = new DiagonalMatrix<int>(2);
             var matrix2 = new SquareMatrix<int>(3);
-            SquareMatrix<int> matrix;
 
-            Assert.Throws<InvalidOperationException>(() => matrix = matrix1 + matrix2);
+            Assert.Throws<InvalidOperationException>(() => matrix1.Add(matrix2));
         }
     }
 }

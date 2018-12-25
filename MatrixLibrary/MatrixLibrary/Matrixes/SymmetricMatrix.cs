@@ -10,57 +10,50 @@ namespace MatrixLibrary.Matrixes
     {
         /// <summary>
         /// Constructor without parameters.
-        /// </summary>
+        /// </summary>en
         public SymmetricMatrix() { }
 
         /// <summary>
         /// Constructor with one parameter.
         /// </summary>
-        public SymmetricMatrix(int size) : base(size) { }
+        /// <param name="size">Size of the matrix.</param>
+        public SymmetricMatrix(int size)
+        {
+            if (size < 2)
+            {
+                throw new ArgumentException($"{nameof(size)} can't be less than 2.");
+            }
+
+            int sumSize = 0;
+            Size = size;
+
+            while (size != 0)
+            {
+                sumSize += size;
+                size--;
+            }
+
+            matrixArray = new T[sumSize];
+        }
 
         /// <summary>
         /// Adds custom matrix.
         /// </summary>
         /// <param name="matrix"></param>
-        public void AddCustomMatrix(T[,] matrix)
+        public void AddCustomMatrix(T[] matrix)
         {
-            if(CheckCustomMatrix(matrix))
+            if (matrix.Length % 3 != 0)
             {
-                matrixArray = matrix;
-            } 
-            else
-            {
-                throw new InvalidOperationException($"{nameof(matrix)} is not symmetric.");
+                throw new ArgumentException("Such matrix won't be symmetric.");
             }
+
+            matrixArray = matrix;
         }
 
-        /// <summary>
-        /// Add operation for two operands.
-        /// </summary>
-        /// <param name="symmetric">First operand.</param>
-        /// <param name="diagonal">Second operand.</param>
-        /// <returns>Result of adding.</returns>
-        public static SymmetricMatrix<T> operator +(SymmetricMatrix<T> symmetric, DiagonalMatrix<T> diagonal)
+        protected override T GetElement(int i, int j)
         {
-            CheckSizes(symmetric, diagonal);
-
-            return GenerateSymmetric(symmetric, diagonal);
+            return FindElem(i, j);
         }
-
-        /// <summary>
-        /// Add operation for two operands.
-        /// </summary>
-        /// <param name="symmetric1">First operand.</param>
-        /// <param name="symmetric2">Second operand.</param>
-        /// <returns>Result of adding.</returns>
-        public static SymmetricMatrix<T> operator +(SymmetricMatrix<T> symmetric1, SymmetricMatrix<T> symmetric2)
-        {
-            CheckSizes(symmetric1, symmetric2);
-
-            return GenerateSymmetric(symmetric1, symmetric2);
-        }
-
-        protected override T GetElement(int i, int j) => matrixArray[i, j];
 
         protected override void SetElement(T value, int i, int j)
         {
@@ -69,62 +62,46 @@ namespace MatrixLibrary.Matrixes
                 throw new InvalidOperationException("Such matrix won't be symmetric.");
             }
 
-            matrixArray[i, j] = value;
-        }
-
-        private static SymmetricMatrix<T> GenerateSymmetric(Matrix<T> matrix1, Matrix<T> matrix2)
-        {
-            var matrix = new T[matrix1.Size, matrix1.Size];
-
-            for (int i = 0; i < matrix1.Size; i++)
+            if (i == 0)
             {
-                for (int j = 0; j < matrix2.Size; j++)
-                {
-                    dynamic temp1 = matrix1[i, j], temp2 = matrix2[i, j];
-
-                    matrix[i, j] = temp1 + temp2;
-                }
+                matrixArray[0] = value;
+                return;
             }
 
-            var symmetric = new SymmetricMatrix<T>(matrix1.Size);
-            symmetric.AddCustomMatrix(matrix);
+            int index = 0;
+            i++;
 
-            return symmetric;
-        }
-
-        private static void CheckSizes(Matrix<T> matrix1, Matrix<T> matrix2)
-        {
-            if (matrix1.Size != matrix2.Size)
+            while(i > 0)
             {
-                throw new InvalidOperationException("Sizes of the matrixes are not equal.");
+                index += i;
+                i--;
             }
+
+            matrixArray[--index] = value;
         }
 
-        private bool CheckCustomMatrix(T[,] matrix)
+        private T FindElem(int i, int j)
         {
-            int count = 0;
-            int length = (int)Math.Sqrt(matrix.Length);
+            T[,] tempArray = new T[Size, Size];
+            int count = 1, counter = 0;
 
-            for (int i = 0; i < length; i++)
+            for (int k = 0; k < Size; k++)
             {
-                for (int j = count; j < length - i; j++)
+                for (int m = 0; m < count; m++)
                 {
-                    if (i != j)
-                    {
-                        dynamic temp1 = matrix[i, j];
-                        dynamic temp2 = matrix[j, i];
-
-                        if (temp1 != temp2)
-                        {
-                            return false;
-                        }
-                    }
+                    tempArray[k, m] = matrixArray[counter];
+                    counter++;
                 }
 
                 count++;
             }
 
-            return true;
+            if(tempArray[i, j] == default)
+            {
+                return tempArray[j, i];
+            }
+
+            return tempArray[i, j];
         }
     }
 }
